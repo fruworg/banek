@@ -1,0 +1,12 @@
+[Unit]
+Description=анекдоты категории /b
+After=caddy.service
+Requires=caddy.service
+
+[Service]
+ExecStart=/usr/local/bin/banek
+WorkingDirectory=/etc/banek
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
