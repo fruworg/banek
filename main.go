@@ -40,7 +40,7 @@ var (
 )
 
 const (
-	version = "1.0.1"
+	version = "1.0.2"
 	cyan    = "\033[1;36m"
 	reset   = "\033[0m"
 )
@@ -85,13 +85,13 @@ func main() {
 
 	err := loadMessages(content)
 	if err != nil {
-		fmt.Printf("Ошибка чтения %d: %d", content, err)
+		fmt.Println("Ошибка чтения JSON:", err)
 		return
 	}
 
 	_, err = ioutil.ReadFile(html)
 	if err != nil {
-		fmt.Printf("Ошибка чтения %d: %d", html, err)
+		fmt.Println("Ошибка чтения HTML:", err)
 		return
 	}
 
@@ -105,69 +105,67 @@ func main() {
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
-
 func parseJSON() {
-    jsonData, err := ioutil.ReadFile(jsonParse)
-    if err != nil {
-	fmt.Println("Ошибка чтения %d: %d", content, err)
-        return
-    }
+	jsonData, err := ioutil.ReadFile(jsonParse)
+	if err != nil {
+		fmt.Println("Ошибка чтения %d: %d", content, err)
+		return
+	}
 
-    var channel Channel
-    if err := json.Unmarshal(jsonData, &channel); err != nil {
-        fmt.Println("Ошибка парсинга JSON:", err)
-        return
-    }
+	var channel Channel
+	if err := json.Unmarshal(jsonData, &channel); err != nil {
+		fmt.Println("Ошибка парсинга JSON:", err)
+		return
+	}
 
-    messageNumber := 1
-    for i, message := range channel.Messages {
-        if message.Text != nil {
-            switch text := message.Text.(type) {
-            case string:
-                if text != "" {
-                    channel.Messages[i].ID = messageNumber
-                    channel.Messages[i].Text = fmt.Sprintf("%s", text)
-                    messageNumber++
-                }
-            case []interface{}:
-                var newText []string
-                for _, item := range text {
-                    if str, ok := item.(string); ok && str != "" {
-                        channel.Messages[i].ID = messageNumber
-                        newText = append(newText, str)
-                        messageNumber++
-                    }
-                }
-                if len(newText) > 0 {
-                    channel.Messages[i].Text = strings.Join(newText, " ")
-                }
-            }
-        }
-    }
+	messageNumber := 1
+	for i, message := range channel.Messages {
+		if message.Text != nil {
+			switch text := message.Text.(type) {
+			case string:
+				if text != "" {
+					channel.Messages[i].ID = messageNumber
+					channel.Messages[i].Text = fmt.Sprintf("%s", text)
+					messageNumber++
+				}
+			case []interface{}:
+				var newText []string
+				for _, item := range text {
+					if str, ok := item.(string); ok && str != "" {
+						channel.Messages[i].ID = messageNumber
+						newText = append(newText, str)
+						messageNumber++
+					}
+				}
+				if len(newText) > 0 {
+					channel.Messages[i].Text = strings.Join(newText, " ")
+				}
+			}
+		}
+	}
 
-    cleanedMessages := make([]Message, 0)
-    for _, message := range channel.Messages {
-        if message.Text != "" {
-            cleanedMessages = append(cleanedMessages, message)
-        }
-    }
-    channel.Messages = cleanedMessages
+	cleanedMessages := make([]Message, 0)
+	for _, message := range channel.Messages {
+		if message.Text != "" {
+			cleanedMessages = append(cleanedMessages, message)
+		}
+	}
+	channel.Messages = cleanedMessages
 
-    formattedJSON, err := json.MarshalIndent(channel, "", "  ")
-    if err != nil {
-        fmt.Println("Ошибка форматирования JSON:", err)
-        return
-    }
+	formattedJSON, err := json.MarshalIndent(channel, "", "  ")
+	if err != nil {
+		fmt.Println("Ошибка форматирования JSON:", err)
+		return
+	}
 
-    if err := ioutil.WriteFile(content, formattedJSON, 0644); err != nil {
-        fmt.Printf("Ошибка записи JSON файла %d: %d", content, err)
-        return
-    }
+	if err := ioutil.WriteFile(content, formattedJSON, 0644); err != nil {
+		fmt.Printf("Ошибка записи JSON файла %d: %d", content, err)
+		return
+	}
 
-    fmt.Println("JSON файл успешно записан по пути", content)
-    return
+	fmt.Println("JSON файл успешно записан по пути", content)
+	return
 }
-
 
 func loadMessages(filename string) error {
 	data, err := ioutil.ReadFile(filename)
