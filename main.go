@@ -40,7 +40,7 @@ var (
 )
 
 const (
-	version = "1.0.0"
+	version = "1.0.1"
 	cyan    = "\033[1;36m"
 	reset   = "\033[0m"
 )
@@ -85,13 +85,13 @@ func main() {
 
 	err := loadMessages(content)
 	if err != nil {
-		fmt.Println("Ошибка чтения %d: %d", content, err)
+		fmt.Printf("Ошибка чтения %d: %d", content, err)
 		return
 	}
 
 	_, err = ioutil.ReadFile(html)
 	if err != nil {
-		fmt.Println("Ошибка чтения %d: %d", html, err)
+		fmt.Printf("Ошибка чтения %d: %d", html, err)
 		return
 	}
 
