@@ -40,7 +40,7 @@ var (
 )
 
 const (
-	version = "1.0.2"
+	version = "1.0.3"
 	cyan    = "\033[1;36m"
 	reset   = "\033[0m"
 )
@@ -204,7 +204,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	userAgent := r.UserAgent()
 
-	if strings.HasPrefix(userAgent, "curl") {
+	if strings.HasPrefix(userAgent, "curl") || idStr == "plain" {
 		if text, ok := message.Text.(string); ok {
 			writePlainTextResponse(w, text, id)
 		} else {
