@@ -2,7 +2,7 @@
 FROM golang:latest as builder
 WORKDIR /app
 COPY main.go ./
-RUN go init main
+RUN go mod init main
 RUN go mod tidy
 RUN go build -o banek
 
