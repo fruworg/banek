@@ -1,0 +1,8 @@
+services:
+  banek:
+    container_name: banek
+    image: fruworg/banek
+    ports:
+      - "127.0.0.1:9999:9999"
+    volumes:
+      - ./content.json:/app/content.json
