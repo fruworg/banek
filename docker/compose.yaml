@@ -5,7 +5,8 @@ services:
     ports:
       - "127.0.0.1:9999:9999"
     volumes:
-      - ./content.json:/app/content.json
+      - ./config/content.json:/app/config/content.json
+      - ./config/template.html:/app/config/template.html
     networks:
       - banek
 networks:
