@@ -1,5 +1,5 @@
 # build
-FROM golang:latest as builder
+FROM golang:latest as build
 WORKDIR /app
 COPY main.go ./
 RUN go mod init main
@@ -9,6 +9,6 @@ RUN go build -o banek
 # deploy
 FROM alpine:latest
 WORKDIR /app
-COPY --from=builder /app/banek .
+COPY --from=build /app/banek .
 EXPOSE 9999
 CMD ["/app/banek"]
