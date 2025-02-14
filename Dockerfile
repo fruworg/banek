@@ -11,4 +11,4 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/banek .
 EXPOSE 9999
-CMD ["/app/bin/banek"]
+CMD ["/app/banek"]
